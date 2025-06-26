@@ -107,3 +107,5 @@ Merged "aks-cluster" as current context in /home/<user>/.kube/config
 kubectl get nodes
 ```
 ✅ You should see 2 nodes with STATUS = Ready.
+
+🧪  Lab: Namespaces, Pods, YAMLs, and Labels
