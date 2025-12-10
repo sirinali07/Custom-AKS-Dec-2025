@@ -35,8 +35,6 @@ In this lab you will:
 <img width="1402" height="854" alt="image" src="https://github.com/user-attachments/assets/ea8bb66c-2e19-4ee8-8838-7c34eb4e2a0b" />
     
 
----
-
 ## Task 2 – Configure Basic Cluster Settings
 
 You are on the **Basics** tab.
@@ -60,7 +58,6 @@ You are on the **Basics** tab.
 
 Click **Next**
 
----
 
 ## Task 3 – Configure Node Pool
 
@@ -77,7 +74,6 @@ Click **Next**
 
 Click **Next**
 
----
 
 ## Task 4 – Configure Networking
 
@@ -92,7 +88,6 @@ On the **Networking** tab:
 
 Click **Next: Monitoring** 
 
----
 
 ## Task 5 – Monitoring 
 
@@ -123,7 +118,7 @@ Click **Go to resource** to open the AKS cluster overview page.
 
 You can use **Cloud Shell** or your local terminal.
 
-1. In the top-right of Azure Portal, click the **Cloud Shell** icon (`>`_).
+1. In the top-right of Azure Portal, click the **Cloud Shell** icon (🖥️ >_).
 2. Choose **Bash**.
 3. Download the credentials to connect to your AKS cluster
 
