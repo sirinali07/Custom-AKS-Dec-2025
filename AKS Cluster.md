@@ -1,11 +1,10 @@
 # Lab: Create an Azure Kubernetes Service (AKS) Cluster (Portal)
 
-## 1. Lab Overview
+## Lab Overview
 
 In this lab you will:
 
-1. Create a **Resource Group**
-2. Create an **AKS cluster** using the Azure Portal
+1. Create an **AKS cluster** using the Azure Portal
 3. Connect to the cluster using **Azure CLI + kubectl**
 4. Verify that the cluster is working
 5. (Optional) Clean up resources
@@ -18,15 +17,15 @@ In this lab you will:
 
 ---
 
-## 2. Prerequisites
+## Prerequisites
 
-- Azure subscription (you can use a free trial or student subscription).
-- Azure CLI installed on your local machine or use **Azure Cloud Shell**.
+- An active **Azure subscription**
+- Access to **Azure Portal**: https://portal.azure.com  
 - Basic understanding of Kubernetes terms: **cluster, node, pod**.
 
 ---
 
-## 3. Task 1 – Sign in and Open AKS Creation Wizard
+## Task 1 – Sign in and Open AKS Creation Wizard
 
 1. Go to [Azure Portal](https://portal.azure.com) and **Sign in**.
 2. In the top search bar, type **“Kubernetes services”** and select it.
@@ -35,117 +34,125 @@ In this lab you will:
  
 <img width="1402" height="854" alt="image" src="https://github.com/user-attachments/assets/ea8bb66c-2e19-4ee8-8838-7c34eb4e2a0b" />
     
-   You should see a screen similar to the screenshot you shared.
 
 ---
 
-## 4. Task 2 – Configure Basic Cluster Settings
+## Task 2 – Configure Basic Cluster Settings
 
 You are on the **Basics** tab.
 
 ### 4.1 Project details
 
-1. **Subscription**: choose your available subscription.  
-2. **Resource group**  
-   - Click **Create new**.  
-   - Name: `rg-aks-lab` (or any name you like).  
-   - Click **OK**.
+1. **Subscription**  
+   - Select: `Azure subscription 1` (or whatever your portal shows with that name).
 
-### 4.2 Cluster details
+2. **Resource group**
+   - Select your `Resource Group` 
+  
 
-1. **Cluster preset configuration**: select **Dev/Test**.
-2. **Kubernetes cluster name**: `aks-lab-cluster` (or your own name).
-3. **Region**: choose a region close to you, e.g. **(US) Central US** or **(Asia Pacific) Central India**.
-4. **AKS pricing tier** (if visible):
-   - Choose **Standard** (default).
+4. **Region**  
+   - Select the region where you want the cluster to be deployed (e.g., East US, West US).
 
-<img width="1400" height="897" alt="image" src="https://github.com/user-attachments/assets/4904eedd-2c77-4e01-af53-998ce5e374f3" />
+5. **AKS pricing tier** (if visible):
+   - Choose **Free** (default).
+     
+6. **Kubernetes Version:**
+   - Select the Kubernetes version you wish to use (default or latest is recommended).
 
+  Leave other options at default
+  
+<img width="1269" height="901" alt="image" src="https://github.com/user-attachments/assets/badc6ac1-fe3f-4caf-941a-66861e0d45f5" />
+
+Click **Next**
 
 ---
 
-## 5. Task 3 – Configure Node Pool
+## Task 3 – Configure Node Pool
 
 1. **Node size**: click **Change size**.
-   - Search for `Standard_D2s_v3`.
-   - Select **Standard_D2s_v3**.
+   - Search for `Standard_B2s`
+   - Select **Standard_B2s**.
    - Click **Select**.
 2. **Node count**:
    - Set **Node count** to `1` or `2` (for lab, `1` is enough and cheaper).
 3. Leave other options at default (System node pool, Virtual Machine scale set).
 
-Click **Next: Access** (or select **Access** from the top tabs).
+<img width="1267" height="891" alt="image" src="https://github.com/user-attachments/assets/01aeb34e-fefb-4016-b458-d61f6a356efb" />
+
+Click **Next**
 
 ---
 
-## 6. Task 4 – Configure Access (Authentication & Authorization)
-
-On the **Access** tab:
-
-1. **Authentication method**: keep **System-assigned managed identity** (default).
-2. **Local accounts with Kubernetes RBAC**:  
-   - For a simple lab, select **Local accounts with Kubernetes RBAC**.
-3. **Azure AD integration**: leave defaults (off) for now.
-
-Click **Next: Networking**.
-
----
-
-## 7. Task 5 – Configure Networking
+## Task 4 – Configure Networking
 
 On the **Networking** tab:
 
 1. **Network configuration**:
-   - Choose **Kubenet** (simple, default) OR **Azure CNI** (more advanced, uses VNet IPs).
-   - For basic lab: keep **Kubenet**.
-2. **DNS name prefix**:
-   - Example: `aks-lab-dns`.
-3. Leave other settings as default (new virtual network, default subnets, etc.).
+   - Choose **Azure CNI** for better integration with Azure services.
+2. Leave other settings as default (new virtual network, default subnets, etc.).
 
-Click **Next: Integrations** or **Next: Monitoring** depending on portal layout.
+<img width="1271" height="888" alt="image" src="https://github.com/user-attachments/assets/b39adcfc-6375-48e1-a3de-e8e6106f58f6" />
+
+
+Click **Next: Monitoring** 
 
 ---
 
-## 8. Task 6 – Monitoring and Tags
-
-### 8.1 Monitoring
+## Task 5 – Monitoring 
 
 1. **Enable Container insights**:  
-   - For lab, you can **Enable** or **Disable**.
-   - If **Enable**, select a **Log Analytics workspace** or create a new one.
+   -  Enable monitoring for your cluster to track performance metrics and logs.
 
-### 8.2 Tags (optional)
+<img width="1274" height="888" alt="image" src="https://github.com/user-attachments/assets/59b888f7-4725-4810-ac1b-c8e7dac53244" />
 
-1. Add tags if you want to track cost, for example:  
-   - `env = dev`  
-   - `owner = your-name`
+`Leave other *options* at default`
 
-Click **Review + create**.
+ 
+## Task 6 – Review and Create Cluster
 
----
+Click **Review + create** to validate your configuration.
 
-## 9. Task 7 – Review and Create Cluster
+- Azure will run **Validation**.
+- Once validation passes, click **Create**.
+- Deployment will start and take a few minutes.
+- When it finishes, you will see **“Your deployment is complete”**.
 
-1. Azure will run **Validation**.
-   - If there are errors, read the message and fix the field.
-2. Once validation passes, click **Create**.
-3. Deployment will start. When it finishes, you will see **“Your deployment is complete”**.
 
 Click **Go to resource** to open the AKS cluster overview page.
 
----
+<img width="1910" height="901" alt="image" src="https://github.com/user-attachments/assets/e990ad4c-37be-42ec-961a-57fafcb1e511" />
 
-## 10. Task 8 – Connect to the AKS Cluster
+
+## Task 7 – Connect to the AKS Cluster
 
 You can use **Cloud Shell** or your local terminal.
 
-### 10.1 Open Cloud Shell
+### 7.1 Open Cloud Shell
 
 1. In the top-right of Azure Portal, click the **Cloud Shell** icon (`>`_).
 2. Choose **Bash**.
-3. Make sure you are in the right subscription:
+3. Download the credentials to connect to your AKS cluster
 
-   ```bash
-   az account show
-   # If wrong subscription:
-   az account set --subscription "<your-subscription-name-or-id>"
+```bash
+az aks get-credentials --resource-group aks-lab-RG --name aks-lab-cluster
+```
+4. Verify the cluster connection
+```bash
+kubectl get nodes
+```
+<img width="1280" height="546" alt="image" src="https://github.com/user-attachments/assets/df932770-e7a1-4aef-bb0e-4e629609b01e" />
+
+You should see list of nodes are in Ready state.
+
+
+
+
+
+
+
+
+
+
+
+
+
