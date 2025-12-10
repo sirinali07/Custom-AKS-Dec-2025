@@ -30,7 +30,11 @@ In this lab you will:
 
 1. Go to [Azure Portal](https://portal.azure.com) and **Sign in**.
 2. In the top search bar, type **“Kubernetes services”** and select it.
-3. Click **+ Create** → **+ Create Kubernetes cluster**.  
+3. Click **+ Create** → **+ Create Kubernetes cluster**.
+
+   <img width="1400" height="897" alt="image" src="https://github.com/user-attachments/assets/572b123f-29d3-4c64-8ca8-ceb4d07ad700" />
+
+    
    You should see a screen similar to the screenshot you shared.
 
 ---
