@@ -32,8 +32,8 @@ In this lab you will:
 2. In the top search bar, type **“Kubernetes services”** and select it.
 3. Click **+ Create** → **+ Create Kubernetes cluster**.
 
-   <img width="1400" height="897" alt="image" src="https://github.com/user-attachments/assets/572b123f-29d3-4c64-8ca8-ceb4d07ad700" />
-
+ 
+<img width="1402" height="854" alt="image" src="https://github.com/user-attachments/assets/ea8bb66c-2e19-4ee8-8838-7c34eb4e2a0b" />
     
    You should see a screen similar to the screenshot you shared.
 
@@ -59,7 +59,8 @@ You are on the **Basics** tab.
 4. **AKS pricing tier** (if visible):
    - Choose **Standard** (default).
 
-Scroll down to the **Node pools** section (still on Basics in some UIs, or separate tab in others).
+<img width="1400" height="897" alt="image" src="https://github.com/user-attachments/assets/4904eedd-2c77-4e01-af53-998ce5e374f3" />
+
 
 ---
 
