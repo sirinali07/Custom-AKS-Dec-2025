@@ -45,17 +45,12 @@ You are on the **Basics** tab.
 
 1. **Subscription**  
    - Select: `Azure subscription 1` (or whatever your portal shows with that name).
-
 2. **Resource group**
-   - Select your `Resource Group` 
-  
-
+   - Select your `Resource Group`   
 4. **Region**  
    - Select the region where you want the cluster to be deployed (e.g., East US, West US).
-
 5. **AKS pricing tier** (if visible):
-   - Choose **Free** (default).
-     
+   - Choose **Free** (default).   
 6. **Kubernetes Version:**
    - Select the Kubernetes version you wish to use (default or latest is recommended).
 
@@ -77,7 +72,8 @@ Click **Next**
    - Set **Node count** to `1` or `2` (for lab, `1` is enough and cheaper).
 3. Leave other options at default (System node pool, Virtual Machine scale set).
 
-<img width="1267" height="891" alt="image" src="https://github.com/user-attachments/assets/01aeb34e-fefb-4016-b458-d61f6a356efb" />
+<img width="1268" height="891" alt="image" src="https://github.com/user-attachments/assets/004f5fa0-6407-4358-ac7c-66a12a488326" />
+
 
 Click **Next**
 
@@ -127,8 +123,6 @@ Click **Go to resource** to open the AKS cluster overview page.
 
 You can use **Cloud Shell** or your local terminal.
 
-### 7.1 Open Cloud Shell
-
 1. In the top-right of Azure Portal, click the **Cloud Shell** icon (`>`_).
 2. Choose **Bash**.
 3. Download the credentials to connect to your AKS cluster
@@ -145,8 +139,11 @@ kubectl get nodes
 You should see list of nodes are in Ready state.
 
 
+## Task 8 – (Optional) Clean up resources
 
-
+```bash
+az group delete --name aks-lab-RG --yes --no-wait
+```
 
 
 
