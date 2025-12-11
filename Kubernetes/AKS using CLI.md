@@ -83,7 +83,17 @@ kubectl get nodes
 🧪  Lab: Namespaces, Pods, YAMLs, and Labels
 
 ### ✅ Step 6: (Optional) Delete Cluster
+
+Verify Existing AKS Clusters
+```bash
+az aks list -o table
+```
+Delete the AKS Cluster
 ```bash
 az aks delete --resource-group <ResourceGroupName> --name <ClusterName> --yes --no-wait
 ```
-
+Delete Resource Group
+```bash
+az group delete --name K8S-RG --yes --no-wait
+```
+⚠️ This will delete all resources inside K8S-RG, not just AKS.
