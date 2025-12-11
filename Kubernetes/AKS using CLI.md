@@ -81,3 +81,9 @@ kubectl get nodes
 ✅ You should see 2 nodes with STATUS = Ready.
 
 🧪  Lab: Namespaces, Pods, YAMLs, and Labels
+
+### ✅ Step 6: (Optional) Delete Cluster
+```bash
+az aks delete --resource-group <ResourceGroupName> --name <ClusterName> --yes --no-wait
+```
+
