@@ -92,7 +92,7 @@ stages:
           kubernetesServiceConnection: $(kubernetesServiceConnection)
           namespace: $(namespace)
           manifests: |
-            $(manifestsFolder)/manifest.yml
+            $(manifestsFolder)/httpd-app.yml
 ```
 7. Click on **Commit**
 8. Add a commit message, e.g.:
