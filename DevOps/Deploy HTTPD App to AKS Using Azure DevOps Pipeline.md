@@ -53,40 +53,110 @@ Your **K8S repo** is now created.
 
 ---
 
-## 📂 Step 3: Upload the `manifest.yml` File (HTTPD App)
+## 📂 Step 3: Create the `manifest.yml` File (HTTPD App)
 
 1. Make sure you are in the **k8s-aks-httpd** repository under **Repos**.
-2. Click on **Files** (if not already there).
-3. Click **Upload files**.
-4. Click **Browse** and select the provided `manifest.yml` file from your local machine.
-5. Verify the **file name** is exactly: `manifest.yml`.
-6. Add a commit message, e.g.:
+2. Click on **Files** .
+3. Click **New** → **Folder**.
+4. Type *New forlder name* (i.e `K8S` ) and *New filename* (i.e `azure-pipeline.yaml`)
+5. Click **create** and  the provided  file content as mentioned below:
+   
+```yaml
+trigger:
+- main   # or the branch you want
+variables:
+  kubernetesServiceConnection: 'aks-httpd-connection'  # <-- change to your service connection name
+  namespace: 'httpd-app-ns'
+  manifestsFolder: 'k8s'
+
+stages:
+- stage: Deploy
+  displayName: Deploy httpd to AKS
+  jobs:
+  - job: DeployHttpd
+    displayName: Deploy httpd app
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+      # (Optional) Show the repo content for debugging
+      - script: |
+          echo "Listing repo files"
+          ls -R
+        displayName: 'List files'
+
+      - task: KubernetesManifest@1
+        displayName: 'Deploy httpd manifest to AKS'
+        inputs:
+          action: 'deploy'
+          kubernetesServiceConnection: $(kubernetesServiceConnection)
+          namespace: $(namespace)
+          manifests: |
+            $(manifestsFolder)/manifest.yml
+```
+7. Click on **Commit**
+8. Add a commit message, e.g.:
    - `Add HTTPD deployment manifest`
-7. Click **Commit** (or **Commit to main**).
-
-> 📝 After commit, you should see `manifest.yml` in the root of the repo.
-
----
-
-## 📄 Step 4: Upload the Pipeline YAML File
-
-You will now add the provided **pipeline definition** file to the same repo.
-
-1. Still in the **k8s-aks-httpd** repository, click **Upload files** again.
-2. Click **Browse** and select the pipeline YAML file from your system:
-   - Example: `AKS App Deployment.yml`
-3. Rename it to **`azure-pipelines.yml`** (recommended for auto-detection), or keep the original name if the trainer instructs so.
-4. Add a commit message, for example:
-   - `Add AKS HTTPD deployment pipeline`
-5. Click **Commit**.
-
-> 🔎 Now the repo should have at least:
-> - `manifest.yml`
-> - `azure-pipelines.yml` (or `AKS App Deployment.yml`)
+9. Click **Commit** (or **Commit to main**)
+10. Similerly Create New file for `httpd-app.yaml`
+11. Click **New** and select file, give name `httpd-app.yaml` and Click **create**
+12. Provided  file content as mentioned below:
+  
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: httpd-app-ns
 
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-deployment
+  namespace: httpd-app-ns
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: httpd
+  template:
+    metadata:
+      labels:
+        app: httpd
+    spec:
+      containers:
+        - name: httpd
+          image: httpd:2.4   # public Docker Hub image
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
 
-## 🔐 Step 5: Create Kubernetes Service Connection in Azure DevOps
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpd-service
+  namespace: httpd-app-ns
+spec:
+  type: LoadBalancer
+  selector:
+    app: httpd
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+```
+13. Click on **Commit**
+    
+---
+
+## 🔐 Step 4: Create Kubernetes Service Connection in Azure DevOps
 
 This service connection allows the pipeline to talk to the AKS cluster.
 
@@ -98,133 +168,52 @@ This service connection allows the pipeline to talk to the AKS cluster.
 6. Authenticate with your Azure subscription if prompted.
 7. Select:
    - **Subscription**: Your Azure subscription
-   - **Resource group**: One containing your AKS
    - **Kubernetes cluster**: Your AKS cluster
+   - **Namespace**
+   - **Service Connection Name**:Give a name such as `aks-httpd-connection`
 8. Check **Grant access permission to all pipelines**.
-9. Give a name such as:  
-   - `aks-httpd-connection`
 10. Click **Save**.
 
 > 💡 Note this name; it must match the name used in your pipeline YAML.
 
 ---
 
-## 🧾 Step 6: Review the Pipeline YAML (High-Level)
 
-> ⚠ Use this section for explanation; the actual YAML file is already in the repo.
+## Step 5: Create the Pipeline in Azure DevOps
 
-A typical pipeline YAML (like your `AKS App Deployment.yml` / `azure-pipelines.yml`) will:
-
-- Use a Microsoft-hosted agent (e.g. `ubuntu-latest`).
-- Use `KubernetesManifest@1` task.
-- Use the **Kubernetes service connection** created in Step 5.
-- Deploy the **`manifest.yml`** file to the AKS cluster.
-
-Example (for explanation only):
-
-```yaml
-trigger:
-  branches:
-    include:
-    - main
-variables:
-- name: kubernetesServiceConnection
-  value: 'AKS-Service-Connection'
-- name: namespace
-  value: 'httpd-app-ns'
-- name: manifestsFolder
-  value: 'k8s'
-stages:
-- stage: Deploy
-  displayName: Deploy httpd to AKS
-  jobs:
-  - job: DeployHttpd
-    displayName: Deploy httpd app
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-    - task: CmdLine@2
-      displayName: 'List files'
-      inputs:
-        script: |
-          echo "Listing repo files"
-          ls -R
-    - task: KubernetesManifest@1
-      displayName: 'Deploy httpd manifest to AKS'
-      inputs:
-        action: 'deploy'
-        kubernetesServiceConnection: $(kubernetesServiceConnection)
-        namespace: $(namespace)
-        manifests: |
-          $(manifestsFolder)/manifest.yml
-
-```
-
-## Step 7: Create the Pipeline in Azure DevOps
-
-In Azure DevOps left menu, click Pipelines → Pipelines.
-
-Click New pipeline.
-
-Choose Azure Repos Git.
-
-Select the repo you created:
-
-k8s-aks-httpd
-
-Azure DevOps will ask “Where is your pipeline YAML?”
-
-If your file is named azure-pipelines.yml in the root, it should auto-detect.
-
-Otherwise, select Existing Azure Pipelines YAML file and browse to:
-
-/AKS App Deployment.yml
-or
-
-/azure-pipelines.yml
-
-Click Continue or Review to see the YAML.
-
-(Optional) Review variables such as:
-
-kubernetesServiceConnection
-
-namespace
-
-manifests
-
-Click Save and run.
-
-Commit directly to main when prompted and click Save and run again.
+1. In Azure DevOps left menu, click **Pipelines → Pipelines**.
+2. Click New pipeline.
+3. Choose Azure Repos Git.
+4. Select the repo you created: k8s-aks-httpd
+5. Select **Existing Azure Pipelines YAML file** and browse to: `azure-pipeline.yaml`
+6. Click Continue or Review to see the YAML.
+7. Click Save and run.
 
 🎬 This will start your first pipeline run.
 
-📡 Step 8: Monitor the Pipeline Run
+---
 
-After clicking Save and run, you’ll be taken to the pipeline run details.
+## 📡Step 6: Monitor the Pipeline Run
 
-Wait for the job DeployHttpd (or similar) to start.
+1. After clicking Save and run, you’ll be taken to the pipeline run details.
+2. Wait for the job DeployHttpd (or similar) to start.
+3. Click on the job to see detailed logs.
+4. Check these key tasks:
+- Checkout: Should complete successfully.
+- KubernetesManifest@1 Deploy: Should show Apply successful messages.
+- Ensure the run finishes with Status: Succeeded.
+5. If there is an error (for example, wrong service connection name or missing manifest.yml), read the error log and fix the YAML or config accordingly, then re-run.
 
-Click on the job to see detailed logs.
-
-Check these key tasks:
-
-Checkout: Should complete successfully.
-
-KubernetesManifest@1 Deploy: Should show Apply successful messages.
-
-Ensure the run finishes with Status: Succeeded.
-
-If there is an error (for example, wrong service connection name or missing manifest.yml), read the error log and fix the YAML or config accordingly, then re-run.
-
-🔍 Step 9: Verify Deployment Using kubectl
+---
+## 🔍Step 7: Verify Deployment Using kubectl
 
 🔑 Ensure kubectl is configured to talk to your AKS cluster. If not, use Azure CLI:
+```
 az aks get-credentials -g <ResourceGroupName> -n <ClusterName>
-
-Open Terminal / PowerShell on your local machine.
-
+```
 Run to list namespaces and ensure httpd-app exists:
-
+```
+kubectl -n httpd-app-ns get pod
+```
 
 
